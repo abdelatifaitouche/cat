@@ -31,13 +31,18 @@ void read_file(char *file_path){
 
 }
 
-
+void read_stdin(){
+	char buffer[4096] ; 
+	while(fgets(buffer , sizeof(buffer) , stdin)){
+		fputs(buffer , stdout) ; 
+	}
+}
 
 int main(int argc  , char *argv[]){
 
 	if(argc < 2){
-		fprintf(stderr , "Usage: %s <file1> [file2...]\n" , argv[0]) ; 
-		return 1 ; 
+		read_stdin() ; 
+		return 0 ; 
 	}
 
 	
