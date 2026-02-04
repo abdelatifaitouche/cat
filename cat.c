@@ -15,11 +15,16 @@ void read_file(char *file_path){
 	char buffer[4096] ; 
 
 	while((bytes_read = fread(buffer , 1 , sizeof(buffer) , fp)) > 0){
-		fwrite(buffer , 1 , bytes_read , stdout);
-		if(ferror(fp)){
-			perror("An error has occured while reading the file\n");
+		if(fwrite(buffer , 1 , bytes_read , stdout) != bytes_read){
+			perror("write error");
+			fclose(fp) ;
 			return ; 
-		}
+		};
+	
+	}
+
+	if(ferror(fp)){
+		perror(file_path) ; 
 	}
 
 	fclose(fp) ;
@@ -31,12 +36,12 @@ void read_file(char *file_path){
 int main(int argc  , char *argv[]){
 
 	if(argc < 2){
-		perror("Invalid Arguments");
+		fprintf(stderr , "Usage: %s <file1> [file2...]\n" , argv[0]) ; 
 		return 1 ; 
 	}
 
 	
-	for(int i=1 ; i<= argc - 1 ; i++){
+	for(int i=1 ; i<argc ; i++){
 		read_file(argv[i]);
 	}
 
