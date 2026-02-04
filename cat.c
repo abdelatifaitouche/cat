@@ -2,6 +2,32 @@
 #include<stdio.h>
 
 
+void read_file(char *file_path){
+	
+	FILE *fp = fopen(file_path , "r") ; 
+	
+	if(fp == NULL){
+		perror(file_path);
+		return ; 
+	}
+
+	size_t bytes_read ; 
+	char buffer[4096] ; 
+
+	while((bytes_read = fread(buffer , 1 , sizeof(buffer) , fp)) > 0){
+		fwrite(buffer , 1 , bytes_read , stdout);
+		if(ferror(fp)){
+			perror("An error has occured while reading the file\n");
+			return ; 
+		}
+	}
+
+	fclose(fp) ;
+
+}
+
+
+
 int main(int argc  , char *argv[]){
 
 	if(argc < 2){
@@ -9,15 +35,10 @@ int main(int argc  , char *argv[]){
 		return 1 ; 
 	}
 
-	FILE *fp = fopen(argv[1] , "r") ;
-
-	size_t bytes_read ; 
-	char buffer[4096];
-	while((bytes_read=fread(buffer , 1 , sizeof(buffer) , fp)) > 0){
-		fwrite(buffer , 1 , bytes_read , stdout);
+	
+	for(int i=1 ; i<= argc - 1 ; i++){
+		read_file(argv[i]);
 	}
-
-	fclose(fp);
 
 	return 0 ; 
 }
